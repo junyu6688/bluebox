@@ -1,0 +1,87 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Goods/index')}">{:L('ADMIN_GOODS_MANAGE')}</a></li>
+			<li><a href="{:U('Goods/add')}">{:L('ADMIN_GOODS_ADD')}</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('Goods/index')}">
+			商品分类： 
+			<select name="goods_type" style="width: 120px;">
+				<option value='0'>全部商品</option>
+			</select> &nbsp;&nbsp;
+			关键词
+			<input type="text" name="keyword" style="width: 200px;" value="{$formget.keyword|default=''}" placeholder="输入关键词">
+			<button class="btn btn-primary">搜索</button>
+			<a class="btn btn-danger" href="{:U('Goods/index')}">清空</a>
+		</form>
+		<form class="js-ajax-form" method="post">
+			<div class="table-actions">
+				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('Goods/delete')}" data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">{:L('DELETE')}</button>
+			</div>
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="100">ID</th>
+						<th width="100">商品名称</th>
+						<!-- <th>点击量</th> -->
+						<th width="80">类型 </th>
+						<th width="120"><span>单价</span></th>
+						<th width="120">限制数量</th>
+						<th width="120">状态</th>
+						<th width="120">操作</th>
+					</tr>
+				</thead>
+				<foreach name="posts" item="vo">
+				<tr>
+					<td><input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]" value="{$vo.id}"></td>
+					<td><a>{$vo.id}</a></td>
+					<td><a href="{:U('portal/page/index',array('id'=>$vo['id']))}" target="_blank"><span>{$vo.post_title}</span></a></td>
+					<!--  <td>0</td> -->
+					<td>{$vo.user_nicename|default=$vo.user_login}</td>
+					<td>{$vo.post_date}</td>
+					<td>{$vo.post_date}</td>
+					<td>{$vo.post_date}</td>
+					<td>
+						<a href="{:U('Goods/edit',array('id'=>$vo['id']))}">{:L('EDIT')}</a>|
+						<a href="{:U('Goods/delete',array('id'=>$vo['id']))}" class="js-ajax-delete">{:L('DELETE')}</a>
+					</td>
+				</tr>
+				</foreach>
+				<tfoot>
+					<tr>
+						<th width="16"><label><input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x"></label></th>
+						<th width="100">ID</th>
+						<th width="100">商品名称</th>
+						<!-- <th>点击量</th> -->
+						<th width="80">类型 </th>
+						<th width="120"><span>单价</span></th>
+						<th width="120">限制数量</th>
+						<th width="120">状态</th>
+						<th width="120">操作</th>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="table-actions">
+				<button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('Goods/delete')}" data-subcheck="true" data-msg="你确定删除吗？">{:L('DELETE')}</button>
+			</div>
+			<div class="pagination">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		setCookie('refersh_time', 0);
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location.reload();
+			}
+		}
+		setInterval(function() {
+			refersh_window()
+		}, 2000);
+	</script>
+</body>
+</html>
