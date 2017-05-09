@@ -18,12 +18,21 @@
 	<div class="wrap js-check-wrap">
 		<ul class="nav nav-tabs">
 			<li><a href="{:U('Goods/index')}">{:L('ADMIN_GOODS_MANAGE')}</a></li>
-			<li class="active"><a href="{:U('Goods/add',array('term'=>empty($term['term_id'])?'':$term['term_id']))}" target="_self">{:L('ADMIN_GOODS_ADD')}</a></li>
+			<li><a href="{:U('Goods/add',array('term'=>empty($term['term_id'])?'':$term['term_id']))}" target="_self">{:L('ADMIN_GOODS_ADD')}</a></li>
+			<li class="active"><a href="#">编辑商品</a></li>
 		</ul>
-		<form action="{:U('Goods/add_post')}" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
+		<form action="{:U('Goods/edit_post')}" method="post" class="form-horizontal js-ajax-forms" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span9">
 					<table class="table table-bordered">
+						<tr>
+							<th>名称</th>
+							<td>
+								<input type="hidden" name="post[id]" value="{$goods_info.id}">
+								<input type="text" style="width:400px;" name="post[goods_name]" id="title" required value="{$goods_info.goods_name}" placeholder="请输入商品名称"/>
+								<span class="form-required">*</span>
+							</td>
+						</tr>
 						<tr>
 							<th width="80">商品分类</th>
 							<td>
@@ -32,32 +41,38 @@
 							</td>
 						</tr>
 						<tr>
-							<th>名称</th>
-							<td>
-								<input type="text" style="width:400px;" name="post[goods_name]" id="title" required value="" placeholder="请输入商品名称"/>
-								<span class="form-required">*</span>
-							</td>
-						</tr>
-						<tr>
 							<th>单价</th>
-							<td><input type="text" name="post[goods_price]" id="keywords" value="" style="width: 400px" placeholder="请输入关键字">单位元</td>
+							<td><input type="text" name="post[goods_price]" id="keywords" value="{$goods_info.goods_price}" style="width: 400px" placeholder="请输入关键字">单位元</td>
 						</tr>
 						<tr>
 							<th>限制数量</th>
-							<td><input type="number" name="post[goods_limit_num]" id="source" value="" style="width: 400px" placeholder="限制补货的最大数量"></td>
+							<td><input type="number" name="post[goods_limit_num]" id="source" value="{$goods_info.goods_limit_num}" style="width: 400px" placeholder="限制补货的最大数量"></td>
 						</tr>
 						<tr>
 							<th>状态</th>
 							<td>
-								<label class="radio"><input type="radio" name="post[status]" value="1" checked>上架</label>
-								<label class="radio"><input type="radio" name="post[status]" value="0">不显示</label>
+								<label class="radio"><input type="radio" name="post[status]" value="0" <if condition="$goods_info.status eq 0">checked</if>>上架</label>
+								<label class="radio"><input type="radio" name="post[status]" value="1" <if condition="$goods_info.status eq 1">checked</if>>不显示</label>
 							</td>
 						</tr>
 						<tr>
 							<th>商品图</th>
 							<td>
-								<ul id="photos" class="pic-list unstyled"></ul>
-								<a href="javascript:upload_multi_image('图片上传','#photos','photos-item-wrapper');" class="btn btn-small">选择图片</a>
+								<ul id="photos" class="pic-list unstyled">
+									<notempty name="smeta['photo']">
+										<foreach name="smeta['photo']" item="vo">
+										<php>$img_url=sp_get_image_preview_url($vo['url']);</php>
+										<li id="savedimage{$key}">
+											<input id="photo-{$key}" type="hidden" name="photos_url[]" value="{$img_url}"> 
+											<input id="photo-{$key}-name" type="text" name="photos_alt[]" value="{$vo.alt}" style="width: 200px;" title="图片名称">
+											<img id="photo-{$key}-preview" src="{:sp_get_image_preview_url($vo['url'])}" style="height:36px;width: 36px;" onclick="parent.image_preview_dialog(this.src);">
+											<a href="javascript:upload_one_image('图片上传','#photo-{$key}');">替换</a>
+											<a href="javascript:(function(){ $('#savedimage{$key}').remove();})();">移除</a>
+										</li>
+										</foreach>
+									</notempty>
+								</ul>
+								<a href="javascript:upload_one_image('图片上传','#photos');" class="btn btn-small">选择图片</a>
 							</td>
 						</tr>
 					</table>
@@ -66,7 +81,7 @@
 			</div>
 			<div class="form-actions">
 				<button class="btn btn-primary js-ajax-submit" type="submit">提交</button>
-				<a class="btn" href="{:U('AdminPost/index')}">返回</a>
+				<a class="btn" href="{:U('Goods/index')}">返回</a>
 			</div>
 		</form>
 	</div>
@@ -212,9 +227,9 @@
 											opacity : 0,
 											content : data.info,
 											button : [ {
-												name : '继续添加？',
+												name : '继续编辑？',
 												callback : function() {
-													reloadPage(window);
+													//reloadPage(window);
 													return true;
 												},
 												focus : true
