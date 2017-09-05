@@ -93,7 +93,9 @@ $configs= array(
         	'__UPLOAD__' => __ROOT__.'/data/upload/',
         	'__STATICS__' => __ROOT__.'/statics/',
             '__WEB_ROOT__'=>__ROOT__
-        )
+        ),
+        'REDIS_HOST'=>'127.0.0.1',
+        'REDIS_PORT'=>6379,
 );
 
 return  array_merge($configs,$db,$runtime_config);

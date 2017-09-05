@@ -2162,3 +2162,12 @@ function sp_mobile_code_log($mobile,$code,$expire_time){
     
     return $result;
 }
+function bb_yuan_to_fen(string $price){
+	$goods_price = round($price, 2);
+	$res = $goods_price*100;
+	return intval($res);
+}
+function bb_fen_to_yuan(int $price){
+	$res = $price/100;
+	return strval($res);
+}

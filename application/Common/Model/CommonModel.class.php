@@ -65,5 +65,22 @@ class CommonModel extends Model {
         
     }
 
+    public function get_cache_flag_val()
+    {
+        $cache_flag = get_class($this) . "_model_cache";
+        $val = S($cache_flag);
+        if ($val === false) {
+            $val = microtime(true);
+            S($cache_flag, $val);
+        }
+        return $val;
+    }
+
+    public function reset_cache_flag_val()
+    {
+        $cache_flag = get_class($this) . "_model_cache";
+        S($cache_flag, time());
+    }
+
 }
 
